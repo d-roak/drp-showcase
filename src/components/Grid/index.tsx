@@ -1,52 +1,14 @@
 import type { DRPNode } from "@ts-drp/node";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GridDRP } from "../../drps/grid";
 import { getColorForPeerId } from "../../utils/color";
+import GridBackground from "./Background";
 
 export default function Grid({ node }: { node: DRPNode }) {
 	const [gridDRP, setGrid] = useState<GridDRP | null>(null);
 	const [gridId, setGridId] = useState<string>("");
 
-	const gridEl = useRef<HTMLDivElement>(null);
-	const [xLines, setXLines] = useState<JSX.Element[]>([]);
-	const [yLines, setYLines] = useState<JSX.Element[]>([]);
-
-	console.log(gridEl);
-
-	useEffect(() => {
-		const gridWidth = gridEl.current?.clientWidth as number;
-		const gridHeight = gridEl.current?.clientHeight as number;
-		const centerX = Math.floor(gridWidth / 2);
-		const centerY = Math.floor(gridHeight / 2);
-
-		// Draw grid lines
-		const numLinesX = Math.floor(gridWidth / 50);
-		const numLinesY = Math.floor(gridHeight / 50);
-
-		console.log(gridWidth, gridHeight);
-		console.log(numLinesX, numLinesY);
-
-		for (let i = -numLinesX; i <= numLinesX; i++) {
-			setXLines((prev) => [
-				...prev,
-				<div
-					key={`x-line-${i}`}
-					className={`absolute left-[${centerX + i * 50}px] top-0 w-1 h-full bg-lightgray`}
-				></div>,
-			]);
-		}
-
-		for (let i = -numLinesY; i <= numLinesY; i++) {
-			setYLines((prev) => [
-				...prev,
-				<div
-					key={`y-line-${i}`}
-					className={`absolute left-0 top-[${centerY + i * 50}px] w-full h-1 bg-lightgray`}
-				></div>,
-			]);
-		}
-	}, [gridEl]);
-
+	// Draw players
 	useEffect(() => {
 		const users = gridDRP?.getUsers();
 		console.log(users);
@@ -146,7 +108,6 @@ export default function Grid({ node }: { node: DRPNode }) {
 
 	return (
 		<div className="flex flex-col items-center grow w-full">
-			<h2 className="text-3xl">Grid DRP</h2>
 			<div>
 				<div className="flex gap-4">
 					<button
@@ -171,14 +132,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 				</div>
 				<p>Your Grid id: {gridId || "none"}</p>
 			</div>
-			<div
-				id="gridEl"
-				ref={gridEl}
-				className="relative border-1 border-black w-full h-[60vh] overflow-hidden"
-			>
-				{<>{xLines}</>}
-				{<>{yLines}</>}
-			</div>
+			<GridBackground />
 		</div>
 	);
 }
