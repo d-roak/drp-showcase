@@ -44,6 +44,8 @@ const GridDRP = ({ node }: { node: DRPNode }) => {
         }
 
         const users = gridDRP?.getUsers();
+        console.log(users);
+
         if (!users) return;
         for (const userColorString of users) {
             const [id, color] = userColorString.split(":");
@@ -55,11 +57,11 @@ const GridDRP = ({ node }: { node: DRPNode }) => {
                 div.style.left = `${centerX + position.x * 50 + 5}px`; // Center the circle
                 div.style.top = `${centerY - position.y * 50 + 5}px`; // Center the circle
                 if (id === node.networkNode.peerId) {
-                    div.style.width = `${34}px`;
-                    div.style.height = `${34}px`;
+                    div.style.width = `${40}px`;
+                    div.style.height = `${40}px`;
                 } else {
-                    div.style.width = `${34 + 6}px`;
-                    div.style.height = `${34 + 6}px`;
+                    div.style.width = `${40}px`;
+                    div.style.height = `${40}px`;
                 }
                 div.style.backgroundColor = color;
                 div.style.borderRadius = "50%";
@@ -89,7 +91,35 @@ const GridDRP = ({ node }: { node: DRPNode }) => {
                 element_grid.appendChild(div);
             }
         }
-    }, [gridDRP, gridDRP?.positions, node.networkNode.peerId]);
+    }, [gridDRP, gridDRP?.getPositions(), node.networkNode.peerId]);
+
+    useEffect(() => {
+        gridDRP?.addUser(node.networkNode.peerId, getColorForPeerId(node.networkNode.peerId));
+    }, [gridDRP, node.networkNode.peerId]);
+
+    useEffect(() => {
+        addEventListener("keydown", (e) => {
+            if (!gridDRP) return;
+            switch (e.key) {
+                case "ArrowUp":
+                    gridDRP.moveUser(node.networkNode.peerId, "U");
+                    break;
+                case "ArrowDown":
+                    gridDRP.moveUser(node.networkNode.peerId, "D");
+                    break;
+                case "ArrowLeft":
+                    gridDRP.moveUser(node.networkNode.peerId, "L");
+                    break;
+                case "ArrowRight":
+                    gridDRP.moveUser(node.networkNode.peerId, "R");
+                    break;
+            }
+        });
+
+        return () => {
+            removeEventListener("keydown", () => {});
+        };
+    }, [gridDRP, node.networkNode.peerId]);
 
     function createConnectHandlers() {
         node.addCustomGroupMessageHandler(gridId, () => {
@@ -118,7 +148,6 @@ const GridDRP = ({ node }: { node: DRPNode }) => {
                             setGridId(drpObject.id);
                             setGrid(drpObject.drp as Grid);
                             createConnectHandlers();
-                            gridDRP?.addUser(node.networkNode.peerId, getColorForPeerId(node.networkNode.peerId));
                         }}
                         type="button"
                     >
