@@ -5,7 +5,7 @@ import {
 	SemanticsType,
 } from "@ts-drp/object";
 
-export class Grid implements DRP {
+export class GridDRP implements DRP {
 	operations: string[] = ["addUser", "moveUser"];
 	semanticsType: SemanticsType = SemanticsType.pair;
 	positions: Map<string, { x: number; y: number }>;
