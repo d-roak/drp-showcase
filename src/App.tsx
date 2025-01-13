@@ -1,33 +1,24 @@
-import { DRPNode } from "@ts-drp/node";
-import { formatPeerId } from "./utils/formatting";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function App(props: { node: DRPNode }) {
-	const [peers, setPeers] = useState<string[]>([]);
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setPeers(props.node.networkNode.getAllPeers());
-		}, 1000);
-		return () => clearInterval(interval);
-	}, [props.node.networkNode]);
-
-	return (
-		<div className="w-screen text-center">
-			<h1>DRP Showcase</h1>
-			<div>
-				<p>Your peer id is: {formatPeerId(props.node.networkNode.peerId)}</p>
-				<p>
-					Your connections:{" "}
-					{peers.map((peer, index) => (
-						<span key={index}>
-							{formatPeerId(peer)}
-							{index < props.node.networkNode.getAllPeers().length - 1 && ", "}
-						</span>
-					))}
-				</p>
-			</div>
-		</div>
-	);
+function App() {
+    return (
+        <div className="w-screen text-center">
+            <div className="grid grid-cols-2 gap-4 max-w-[600px] mx-auto">
+                <Link to="/grid-drp">
+                    <div className="p-4 bg-white rounded-xl">Grid example with DRP</div>
+                </Link>
+                <Link to="/">
+                    <div className="p-4 bg-white rounded-xl">Grid example without DRP</div>
+                </Link>
+                <Link to="/">
+                    <div className="p-4 bg-white rounded-xl">Chat example with DRP</div>
+                </Link>
+                <Link to="/">
+                    <div className="p-4 bg-white rounded-xl">Chat example with DRP</div>
+                </Link>
+            </div>
+        </div>
+    );
 }
 
 export default App;
