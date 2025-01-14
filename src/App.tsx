@@ -1,32 +1,26 @@
 import { DRPNode } from "@ts-drp/node";
-import { formatPeerId } from "./utils/formatting";
-import { useEffect, useState } from "react";
+import Header from "./components/Header";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Grid from "./components/Grid";
+import Home from "./components/Home";
 
 function App(props: { node: DRPNode }) {
-	const [peers, setPeers] = useState<string[]>([]);
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setPeers(props.node.networkNode.getAllPeers());
-		}, 1000);
-		return () => clearInterval(interval);
-	}, [props.node.networkNode]);
+	const router = createBrowserRouter([
+		{
+			path: "/",
+			element: <Home />,
+		},
+		{
+			path: "/grid-drp",
+			element: <Grid node={props.node} />,
+		},
+	]);
 
 	return (
-		<div className="w-screen text-center">
-			<h1>DRP Showcase</h1>
-			<div>
-				<p>Your peer id is: {formatPeerId(props.node.networkNode.peerId)}</p>
-				<p>
-					Your connections:{" "}
-					{peers.map((peer, index) => (
-						<span key={index}>
-							{formatPeerId(peer)}
-							{index < props.node.networkNode.getAllPeers().length - 1 && ", "}
-						</span>
-					))}
-				</p>
-			</div>
-		</div>
+		<>
+			<Header node={props.node} />
+			<RouterProvider router={router} />
+		</>
 	);
 }
 

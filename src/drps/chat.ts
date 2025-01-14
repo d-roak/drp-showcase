@@ -5,7 +5,7 @@ import {
 	SemanticsType,
 } from "@ts-drp/object";
 
-export class Chat implements DRP {
+export class ChatDRP implements DRP {
 	semanticsType: SemanticsType = SemanticsType.pair;
 	// store messages as strings in the format (timestamp, message, peerId)
 	messages: Set<string>;
