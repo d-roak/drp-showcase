@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { formatPeerId } from "../utils/formatting";
 import type { DRPNode } from "@ts-drp/node";
+import { Link } from "react-router-dom";
 
 export default function Header(props: { node: DRPNode }) {
 	const [peers, setPeers] = useState<string[]>([]);
@@ -13,7 +14,9 @@ export default function Header(props: { node: DRPNode }) {
 
 	return (
 		<header className="mx-auto w-fit mt-10">
-			<h1>DRP Showcase</h1>
+			<Link to="/">
+				<h1 className="text-blue-300">DRP Showcase</h1>
+			</Link>
 			<div className="mb-10">
 				<p>Your peer id is: {formatPeerId(props.node.networkNode.peerId)}</p>
 				<p>
