@@ -6,9 +6,10 @@ export default function GridPlayers(props: {
 	peerId: string;
 	grid: GridDRP | null;
 	gridEl: React.RefObject<HTMLDivElement>;
+	rerender: number;
+	setRerender: (rerender: number) => void;
 }) {
 	const [playersEls, setPlayersEls] = useState<JSX.Element[]>([]);
-	const [rerender, setRerender] = useState(0);
 
 	const [centerX, setCenterX] = useState<number>(0);
 	const [centerY, setCenterY] = useState<number>(0);
@@ -37,7 +38,7 @@ export default function GridPlayers(props: {
 				props.grid.moveUser(props.peerId, "R");
 				break;
 		}
-		setRerender(Math.random());
+		props.setRerender(Math.random());
 	};
 
 	useEffect(() => {
@@ -62,7 +63,7 @@ export default function GridPlayers(props: {
 						top: `${centerY - pos[1].y * 50 + 5}px`,
 						width: `${40}px`,
 						height: `${40}px`,
-						backgroundColor: getColorForPeerId(props.peerId),
+						backgroundColor: getColorForPeerId(pos[0]),
 						borderRadius: "50%",
 						transition: "background-color 1s ease-in-out",
 						animation: `glow-${pos[0]} 0.5s infinite alternate`,
@@ -70,7 +71,7 @@ export default function GridPlayers(props: {
 				></div>,
 			]);
 		}
-	}, [rerender, props.grid, props.peerId, centerX, centerY]);
+	}, [props.rerender, props.grid, props.peerId, centerX, centerY]);
 
 	return <>{playersEls}</>;
 }
