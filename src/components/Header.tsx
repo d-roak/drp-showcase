@@ -52,12 +52,12 @@ export default function Header(props: { node: DRPNode }) {
                     </button>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <p className="overflow-hidden whitespace-nowrap">Your Multiaddr: {props.node.networkNode.getMultiaddrs() ? props.node.networkNode.getMultiaddrs()[0] : ""}</p>
+                    <p className="overflow-hidden whitespace-nowrap">Your Multiaddr: {props.node.networkNode.getMultiaddrs() ? props.node.networkNode.getMultiaddrs()![0] : ""}</p>
                     <button
                         className="py-1"
                         type="button"
                         onClick={() => {
-                            navigator.clipboard.writeText(props.node.networkNode.getMultiaddrs()[0]);
+                            navigator.clipboard.writeText(props.node.networkNode.getMultiaddrs()![0]);
                         }}
                     >
                         Copy
