@@ -31,8 +31,8 @@ export default function Header(props: { node: DRPNode }) {
         if (!peerId) {
             return;
         }
-        setPeerId("");
         await props.node.networkNode.connect(peerId);
+        setPeerId("");
     };
 
     return (

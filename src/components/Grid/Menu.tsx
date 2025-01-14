@@ -43,6 +43,7 @@ export default function GridMenu(props: { node: DRPNode; setGrid: (grid: GridDRP
             drp.addUser(props.node.networkNode.peerId);
             setGridId(drpId);
             props.setGrid(drp);
+            props.setRerender(Math.random());
             console.log("Succeeded in connecting with DRP", drpId);
         } catch (e) {
             console.error("Error while connecting with DRP", drpId, e);
