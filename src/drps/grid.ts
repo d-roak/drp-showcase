@@ -45,9 +45,7 @@ export class GridDRP implements DRP {
 		return [...this.positions.entries()];
 	}
 
-	getUserPosition(
-		peerId: string,
-	): { x: number; y: number } | undefined {
+	getUserPosition(peerId: string): { x: number; y: number } | undefined {
 		return this.positions.get(peerId);
 	}
 

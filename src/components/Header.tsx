@@ -13,12 +13,11 @@ export default function Header(props: { node: DRPNode }) {
         return () => clearInterval(interval);
     }, [props.node.networkNode]);
 
-    const removeBootstrap = (node: string) => {
+    const removeBootstrap = async (node: string) => {
         try {
             const newBootstraps = bootstraps.filter((n) => n !== node);
-            props.node.networkNode.disconnect(node.split("/").pop()!);
             setBootstraps(newBootstraps);
-            props.node.networkNode.restart({
+            await props.node.restart({
                 bootstrap_peers: newBootstraps,
             });
             console.log("newBootstraps", newBootstraps);
