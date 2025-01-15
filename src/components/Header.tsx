@@ -101,7 +101,7 @@ export default function Header(props: { node: DRPNode }) {
 						scrollbarWidth: "none",
 					}}
 				>
-					<h3 className="text-xl sticky top-0 bg-[#242425]">
+					<h3 className="text-xl sticky top-0 dark:bg-[#242425]">
 						Your connections
 					</h3>
 					{peers.map((peer) =>
