@@ -112,8 +112,8 @@ export default function Header(props: { node: DRPNode }) {
 								<p>{formatPeerId(peer)}</p>
 								<button
 									className="p-0 bg-transparent text-white"
-									onClick={() => {
-										props.node.networkNode.disconnect(peer);
+									onClick={async () => {
+										await props.node.networkNode.disconnect(peer);
 									}}
 									type="button"
 								>
