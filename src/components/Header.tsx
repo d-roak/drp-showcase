@@ -21,7 +21,9 @@ export default function Header(props: { node: DRPNode }) {
 			const newBootstraps = bootstraps.filter((n) => n !== node);
 			setBootstraps(newBootstraps);
 			await props.node.restart({
-				bootstrap_peers: newBootstraps,
+				network_config: {
+					bootstrap_peers: newBootstraps,
+				},
 			});
 			console.log("newBootstraps", newBootstraps);
 		} catch (e) {
