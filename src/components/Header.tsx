@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
-import { formatPeerId } from "../utils/formatting";
 import type { DRPNode } from "@ts-drp/node";
 import { Ban, Copy, IdCard } from "lucide-react";
+import { useEffect, useState } from "react";
+import { formatPeerId } from "../utils/formatting";
 
 export default function Header(props: { node: DRPNode }) {
+	const [multiaddr, setMultiaddr] = useState<string>("");
 	const [peers, setPeers] = useState<string[]>([]);
 	const [peerId, setPeerId] = useState<string>("");
 	const [bootstraps, setBootstraps] = useState<string[]>(
@@ -11,6 +12,8 @@ export default function Header(props: { node: DRPNode }) {
 	);
 	useEffect(() => {
 		const interval = setInterval(() => {
+			const ma = props.node.networkNode.getMultiaddrs();
+			if (ma) setMultiaddr(ma[0]);
 			setPeers(props.node.networkNode.getAllPeers());
 		}, 1000);
 		return () => clearInterval(interval);
@@ -58,18 +61,13 @@ export default function Header(props: { node: DRPNode }) {
 			</div>
 			<div className="flex gap-2 items-center">
 				<p className="overflow-hidden whitespace-nowrap">
-					Your Multiaddr:{" "}
-					{props.node.networkNode.getMultiaddrs()
-						? props.node.networkNode.getMultiaddrs()![0]
-						: ""}
+					Your Multiaddr: {multiaddr}
 				</p>
 				<button
 					className="py-1"
 					type="button"
 					onClick={() => {
-						navigator.clipboard.writeText(
-							props.node.networkNode.getMultiaddrs()![0],
-						);
+						navigator.clipboard.writeText(multiaddr);
 					}}
 				>
 					<Copy />
@@ -78,24 +76,23 @@ export default function Header(props: { node: DRPNode }) {
 			<div className="flex grow justify-between min-w-[50vw] overflow-auto">
 				<div>
 					<h3 className="text-xl">Your bootstraps</h3>
-					{bootstraps.map((node) => (
-						<div key={node} className="flex items-center justify-between">
-							<p>
-								{formatPeerId(
-									node.split("/").pop() ? node.split("/").pop()! : "",
-								)}
-							</p>
-							<button
-								className="p-0 bg-transparent text-white"
-								onClick={() => {
-									removeBootstrap(node);
-								}}
-								type="button"
-							>
-								<Ban className="text-gray-500" size={18} />
-							</button>
-						</div>
-					))}
+					{bootstraps.map((node) => {
+						const peerId = node.split("/").pop() ? node.split("/").pop() : "";
+						return (
+							<div key={node} className="flex items-center justify-between">
+								<p>{formatPeerId(peerId ?? "")}</p>
+								<button
+									className="p-0 bg-transparent text-white"
+									onClick={() => {
+										removeBootstrap(node);
+									}}
+									type="button"
+								>
+									<Ban className="text-gray-500" size={18} />
+								</button>
+							</div>
+						);
+					})}
 				</div>
 				<div
 					className="h-full max-h-full overflow-auto"
