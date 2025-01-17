@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GridDRP } from "../../drps/grid";
+import type { GridDRP } from "../../drps/grid";
 import { getColorForPeerId } from "../../utils/color";
 
 export default function GridPlayers(props: {
@@ -68,10 +68,10 @@ export default function GridPlayers(props: {
 						transition: "background-color 1s ease-in-out",
 						animation: `glow-${pos[0]} 0.5s infinite alternate`,
 					}}
-				></div>,
+				/>,
 			]);
 		}
-	}, [props.rerender, props.grid, props.peerId, centerX, centerY]);
+	}, [props.grid, centerX, centerY]);
 
 	return <>{playersEls}</>;
 }

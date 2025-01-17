@@ -1,0 +1,19 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+	"files": {
+		"ignore": ["**/dist/*"]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error"
+			}
+		}
+	},
+	"organizeImports": {
+		"enabled": true
+	}
+}

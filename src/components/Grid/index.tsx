@@ -1,9 +1,9 @@
 import type { DRPNode } from "@ts-drp/node";
 import { useRef, useState } from "react";
-import { GridDRP } from "../../drps/grid";
+import type { GridDRP } from "../../drps/grid";
 import GridBackground from "./Background";
-import GridPlayers from "./Players";
 import GridMenu from "./Menu";
+import GridPlayers from "./Players";
 
 export default function Grid(props: { node: DRPNode }) {
 	const gridEl = useRef<HTMLDivElement>(null);

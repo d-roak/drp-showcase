@@ -22,8 +22,8 @@ export default function GridBackground(props: {
 				<div
 					key={`x-line-${i}`}
 					style={{ left: `${centerX + i * 50}px` }}
-					className={`absolute top-0 w-0.5 h-full bg-gray-400`}
-				></div>,
+					className={"absolute top-0 w-0.5 h-full bg-gray-400"}
+				/>,
 			]);
 		}
 
@@ -33,15 +33,15 @@ export default function GridBackground(props: {
 				<div
 					key={`y-line-${i}`}
 					style={{ top: `${centerY + i * 50}px` }}
-					className={`absolute left-0 w-full h-0.5 bg-gray-400`}
-				></div>,
+					className={"absolute left-0 w-full h-0.5 bg-gray-400"}
+				/>,
 			]);
 		}
 	}, [props.gridEl]);
 	return (
 		<>
-			{<>{xLines}</>}
-			{<>{yLines}</>}
+			{xLines}
+			{yLines}
 		</>
 	);
 }

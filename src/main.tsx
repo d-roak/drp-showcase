@@ -8,4 +8,5 @@ import App from "./App.tsx";
 const node = new DRPNode();
 await node.start();
 
-createRoot(document.getElementById("root")!).render(<App node={node} />);
+const root = document.getElementById("root") as HTMLElement;
+createRoot(root).render(<App node={node} />);
