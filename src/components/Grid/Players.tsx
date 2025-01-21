@@ -1,77 +1,74 @@
-import { useEffect, useState } from "react";
-import type { GridDRP } from "../../drps/grid";
+import { useEffect, useMemo, useRef } from "react";
 import { getColorForPeerId } from "../../utils/color";
 
-export default function GridPlayers(props: {
+const PlayerElement = ({
+	peerId,
+	position,
+	centerX,
+	centerY,
+}: {
 	peerId: string;
-	grid: GridDRP | null;
-	gridEl: React.RefObject<HTMLDivElement>;
-	rerender: number;
-	setRerender: (rerender: number) => void;
+	position: { x: number; y: number };
+	centerX: number;
+	centerY: number;
+}) => {
+	const playerRef = useRef<HTMLDivElement>(null);
+
+	const left = useMemo(
+		() => centerX + position.x * 50 + 5,
+		[centerX, position.x],
+	);
+	const top = useMemo(
+		() => centerY - position.y * 50 + 5,
+		[centerY, position.y],
+	);
+
+	useEffect(() => {
+		if (playerRef.current) {
+			playerRef.current.style.left = `${left}px`;
+			playerRef.current.style.top = `${top}px`;
+		}
+	}, [left, top]);
+
+	return (
+		<div
+			ref={playerRef}
+			key={`player-${peerId}`}
+			style={{
+				position: "absolute",
+				left: `${centerX + position.x * 50 + 5}px`,
+				top: `${centerY - position.y * 50 + 5}px`,
+				width: "40px",
+				height: "40px",
+				backgroundColor: getColorForPeerId(peerId),
+				borderRadius: "50%",
+				transition: "background-color 1s ease-in-out",
+				animation: `glow-${peerId} 0.5s infinite alternate`,
+			}}
+		/>
+	);
+};
+
+export default function GridPlayers({
+	positions,
+	centerX,
+	centerY,
+}: {
+	positions: [string, { x: number; y: number }][] | null;
+	centerX: number;
+	centerY: number;
 }) {
-	const [playersEls, setPlayersEls] = useState<JSX.Element[]>([]);
-
-	const [centerX, setCenterX] = useState<number>(0);
-	const [centerY, setCenterY] = useState<number>(0);
-
-	useEffect(() => {
-		const gridWidth = props.gridEl.current?.clientWidth as number;
-		const gridHeight = props.gridEl.current?.clientHeight as number;
-		setCenterX(Math.floor(gridWidth / 2));
-		setCenterY(Math.floor(gridHeight / 2));
-	}, [props.gridEl]);
-
-	// add player movement controls
-	const movementHandler = (e: KeyboardEvent) => {
-		if (!props.grid) return;
-		switch (e.key) {
-			case "ArrowUp":
-				props.grid.moveUser(props.peerId, "U");
-				break;
-			case "ArrowDown":
-				props.grid.moveUser(props.peerId, "D");
-				break;
-			case "ArrowLeft":
-				props.grid.moveUser(props.peerId, "L");
-				break;
-			case "ArrowRight":
-				props.grid.moveUser(props.peerId, "R");
-				break;
-		}
-		props.setRerender(Math.random());
-	};
-
-	useEffect(() => {
-		addEventListener("keydown", movementHandler);
-		return () => {
-			removeEventListener("keydown", movementHandler);
-		};
-	});
-
-	// Draw players
-	useEffect(() => {
-		setPlayersEls([]);
-		const positions = props.grid?.getPositions();
-		for (const pos of positions ?? []) {
-			setPlayersEls((prev) => [
-				...prev,
-				<div
-					key={`player-${pos[0]}`}
-					style={{
-						position: "absolute",
-						left: `${centerX + pos[1].x * 50 + 5}px`,
-						top: `${centerY - pos[1].y * 50 + 5}px`,
-						width: `${40}px`,
-						height: `${40}px`,
-						backgroundColor: getColorForPeerId(pos[0]),
-						borderRadius: "50%",
-						transition: "background-color 1s ease-in-out",
-						animation: `glow-${pos[0]} 0.5s infinite alternate`,
-					}}
-				/>,
-			]);
-		}
-	}, [props.grid, centerX, centerY]);
-
-	return <>{playersEls}</>;
+	return (
+		<>
+			{positions?.map(([peerId, pos]) => (
+				<PlayerElement
+					key={peerId}
+					peerId={peerId}
+					position={pos}
+					centerX={centerX}
+					centerY={centerY}
+				/>
+			))}
+		</>
+	);
 }
