@@ -142,7 +142,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 	}, [node]);
 
 	return (
-		<div className="min-h-screen max-h-screen flex flex-col h-screen bg-gradient-to-t from-[#383838] to-[#C3C5C3] pt-4">
+		<div className="min-h-screen max-h-screen flex flex-col h-screen bg-gradient-to-t from-[#383838] to-[50%] to-[#C3C5C3] pt-4">
 			<div className="px-20 py-8 flex-grow flex flex-col">
 				<div className="relative flex w-full h-full border-4 border-[#2B2B2B] rounded-3xl bg-[#FFF9D7]">
 					<img
@@ -251,7 +251,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 						Join Grid
 					</p>
 				</div>
-				<p className="font-['Pixel'] text-black text-center">
+				<p className="font-['Pixel'] text-black text-center mb-3 text-xl">
 					Your Grid ID: {gridId.slice(0, 8)} ... {gridId.slice(-8)}
 				</p>
 			</div>
