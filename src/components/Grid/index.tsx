@@ -11,7 +11,6 @@ import right from "../../assets/grid/right.svg";
 import { GridGame } from "../../grid";
 import { Player } from "../../grid/Player";
 import { getColorForPeerId } from "../../utils/color";
-import GridMenu from "./Menu";
 import { CELL_SIZE } from "../../grid/Map";
 import { User } from "lucide-react";
 
@@ -34,9 +33,9 @@ export default function Grid({ node }: { node: DRPNode }) {
 	const [grid, setGrid] = useState<GridDRP | null>(null);
 	const [ma, setMa] = useState<string>("");
 	const gridCanvas = useRef<HTMLCanvasElement>(null);
-	const [positions, setPositions] = useState<
-		Map<string, { x: number; y: number }>
-	>(new Map());
+	const [_, setPositions] = useState<Map<string, { x: number; y: number }>>(
+		new Map(),
+	);
 
 	const query_reactCallback = useCallback(
 		(peerId: string, position: { x: number; y: number }) => {
@@ -134,7 +133,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 
 	useEffect(() => {
 		const id = setInterval(() => {
-			setMa(node.networkNode.getMultiaddrs()[0]);
+			setMa(node.networkNode?.getMultiaddrs()?.[0] || "");
 		});
 
 		return () => {
