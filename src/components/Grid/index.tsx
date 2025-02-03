@@ -263,7 +263,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 							Your connections
 						</h3>
 						<div className="flex flex-col gap-2 mt-4">
-							{node.networkNode.getAllPeers().map((node) => {
+							{peers.map((node) => {
 								return (
 									<div key={node} className="">
 										<p className="text-nowrap font-['Pixel']">
