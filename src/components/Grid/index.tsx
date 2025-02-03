@@ -10,6 +10,7 @@ import middle from "../../assets/grid/middle.svg";
 import right from "../../assets/grid/right.svg";
 import mandu from "../../assets/grid/mandu.svg";
 import input from "../../assets/grid/input.svg";
+import copy from "../../assets/grid/copy.svg";
 import { GridGame } from "../../grid";
 import { Player } from "../../grid/Player";
 import { getColorForPeerId } from "../../utils/color";
@@ -157,24 +158,37 @@ export default function Grid({ node }: { node: DRPNode }) {
 						<div className="flex">
 							<img src={left} alt="left" className="" />
 							<div
-								className="min-h-0 w-full flex items-center justify-center font-['Pixel'] px-2 pb-2 gap-2"
+								className="min-h-0 w-full flex items-center justify-center font-['Pixel'] px-2 gap-2"
 								style={{
 									backgroundImage: `url("${middle}")`,
 									backgroundSize: "100% 100%",
 								}}
 							>
-								<img src={mandu} alt="mandu" className="w-6 aspect-square" />
-								<p>
+								<img
+									src={mandu}
+									alt="mandu"
+									className="w-6 aspect-square mb-2"
+								/>
+								<p className="mb-2">
 									{node.networkNode.peerId.slice(0, 4)}...
 									{node.networkNode.peerId.slice(-4)}
 								</p>
+								<button
+									className=""
+									onClick={() => {
+										navigator.clipboard.writeText(ma);
+									}}
+									type="button"
+								>
+									<img src={copy} alt="copy" className="w-6 aspect-square" />
+								</button>
 							</div>
 							<img src={right} alt="right" className="" />
 						</div>
 						<div className="flex flex-grow">
 							<img src={left} alt="left" className="" />
 							<div
-								className="min-h-0 w-full flex items-center font-['Pixel'] px-2"
+								className="min-h-0 w-full flex items-center justify-between font-['Pixel'] px-2"
 								style={{
 									backgroundImage: `url("${middle}")`,
 									backgroundSize: "100% 100%",
@@ -183,6 +197,15 @@ export default function Grid({ node }: { node: DRPNode }) {
 								<p className="mb-2">
 									Your Multiaddrs: {ma.slice(0, 16)}...{ma.slice(-16)}
 								</p>
+								<button
+									className="mb-1"
+									onClick={() => {
+										navigator.clipboard.writeText(ma);
+									}}
+									type="button"
+								>
+									<img src={copy} alt="copy" className="w-6 aspect-square" />
+								</button>
 							</div>
 							<img src={right} alt="right" className="" />
 						</div>

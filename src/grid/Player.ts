@@ -23,10 +23,10 @@ export class Player {
 		// ctx.fillStyle = this.color;
 		ctx.drawImage(
 			this.img,
-			this.x - xView + 5,
-			this.y - yView + 5,
-			CELL_SIZE - 10,
-			CELL_SIZE - 10,
+			this.x - xView + 10,
+			this.y - yView + 10,
+			CELL_SIZE - 20,
+			CELL_SIZE - 20,
 		);
 		ctx.restore();
 	}
