@@ -35,6 +35,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 	const [gridId, setGridId] = useState<string>("");
 	const [grid, setGrid] = useState<GridDRP | null>(null);
 	const [gridIdInput, setGridIdInput] = useState<string>("");
+	const [peers, setPeers] = useState<string[]>([]);
 	const [ma, setMa] = useState<string>("");
 	const gridCanvas = useRef<HTMLCanvasElement>(null);
 	const [_, setPositions] = useState<Map<string, { x: number; y: number }>>(
@@ -138,6 +139,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 	useEffect(() => {
 		const id = setInterval(() => {
 			setMa(node.networkNode?.getMultiaddrs()?.[0] || "");
+			setPeers(node.networkNode.getAllPeers());
 		});
 
 		return () => {
@@ -146,7 +148,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 	}, [node]);
 
 	return (
-		<div className="min-h-screen max-h-screen flex flex-col h-screen bg-gradient-to-t from-[#383838] to-[50%] to-[#C3C5C3] pt-4">
+		<div className="relative min-h-screen max-h-screen flex flex-col h-screen bg-gradient-to-t from-[#383838] to-[50%] to-[#C3C5C3] pt-4">
 			<div className="px-20 py-8 flex-grow flex flex-col">
 				<div className="relative flex w-full h-full border-4 border-[#2B2B2B] rounded-xl bg-[#FFF9D7]">
 					<img
@@ -231,6 +233,47 @@ export default function Grid({ node }: { node: DRPNode }) {
 						ref={gridCanvas}
 						className="absolute top-0 w-full h-full rounded-3xl"
 					/>
+				</div>
+			</div>
+			<div className="absolute top-60 left-5 rounded-xl bg-[#FFFDF1] border-4 border-black">
+				<div className="flex justify-end gap-2 border-b-4 border-black p-2">
+					<div className="w-3 aspect-square rounded-full bg-[#719F52]" />
+					<div className="w-3 aspect-square rounded-full bg-[#FFE100]" />
+					<div className="w-3 aspect-square rounded-full bg-[#E44B4B]" />
+				</div>
+				<div className="flex font-['Pixel'] p-4 gap-4">
+					<div className="relative p-2 border-t-2 border-r-2 rounded-r-sm rounded-b-none border-black min-w-[250px]">
+						<h3 className="absolute -top-4 left-0 z-10 bg-[#FFFDF1] text-nowrap">
+							Your bootstraps
+						</h3>
+						<div className="flex flex-col gap-2 mt-4">
+							{node.networkNode.getBootstrapNodes().map((node) => {
+								return (
+									<div key={node} className="">
+										<p className="text-nowrap font-['Pixel']">
+											{node.slice(0, 4)}...{node.slice(-4)}
+										</p>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+					<div className="relative p-2 border-t-2 border-l-2 rounded-l-sm rounded-b-none border-black min-w-[250px]">
+						<h3 className="absolute -top-4 right-0 z-10 bg-[#FFFDF1] text-nowrap">
+							Your connections
+						</h3>
+						<div className="flex flex-col gap-2 mt-4">
+							{node.networkNode.getAllPeers().map((node) => {
+								return (
+									<div key={node} className="">
+										<p className="text-nowrap font-['Pixel']">
+											{node.slice(0, 4)}...{node.slice(-4)}
+										</p>
+									</div>
+								);
+							})}
+						</div>
+					</div>
 				</div>
 			</div>
 			<div
