@@ -8,6 +8,8 @@ import button from "../../assets/grid/button.svg";
 import left from "../../assets/grid/left.svg";
 import middle from "../../assets/grid/middle.svg";
 import right from "../../assets/grid/right.svg";
+import mandu from "../../assets/grid/mandu.svg";
+import input from "../../assets/grid/input.svg";
 import { GridGame } from "../../grid";
 import { Player } from "../../grid/Player";
 import { getColorForPeerId } from "../../utils/color";
@@ -31,6 +33,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 	const peerId = node.networkNode.peerId;
 	const [gridId, setGridId] = useState<string>("");
 	const [grid, setGrid] = useState<GridDRP | null>(null);
+	const [gridIdInput, setGridIdInput] = useState<string>("");
 	const [ma, setMa] = useState<string>("");
 	const gridCanvas = useRef<HTMLCanvasElement>(null);
 	const [_, setPositions] = useState<Map<string, { x: number; y: number }>>(
@@ -144,7 +147,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 	return (
 		<div className="min-h-screen max-h-screen flex flex-col h-screen bg-gradient-to-t from-[#383838] to-[50%] to-[#C3C5C3] pt-4">
 			<div className="px-20 py-8 flex-grow flex flex-col">
-				<div className="relative flex w-full h-full border-4 border-[#2B2B2B] rounded-3xl bg-[#FFF9D7]">
+				<div className="relative flex w-full h-full border-4 border-[#2B2B2B] rounded-xl bg-[#FFF9D7]">
 					<img
 						src={heading}
 						alt="heading"
@@ -154,14 +157,14 @@ export default function Grid({ node }: { node: DRPNode }) {
 						<div className="flex">
 							<img src={left} alt="left" className="" />
 							<div
-								className="min-h-0 w-full flex items-center justify-center font-['Pixel'] px-2"
+								className="min-h-0 w-full flex items-center justify-center font-['Pixel'] px-2 pb-2 gap-2"
 								style={{
 									backgroundImage: `url("${middle}")`,
 									backgroundSize: "100% 100%",
 								}}
 							>
-								<User size={24} />
-								<p className="mb-2">
+								<img src={mandu} alt="mandu" className="w-6 aspect-square" />
+								<p>
 									{node.networkNode.peerId.slice(0, 4)}...
 									{node.networkNode.peerId.slice(-4)}
 								</p>
@@ -171,7 +174,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 						<div className="flex flex-grow">
 							<img src={left} alt="left" className="" />
 							<div
-								className="min-h-0 w-full flex items-center justify-center font-['Pixel'] px-2"
+								className="min-h-0 w-full flex items-center font-['Pixel'] px-2"
 								style={{
 									backgroundImage: `url("${middle}")`,
 									backgroundSize: "100% 100%",
@@ -216,7 +219,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 				}}
 			>
 				<div
-					className="absolute top-1/2 -translate-y-1/2 left-40 p-4 min-h-[60px] min-w-fit flex"
+					className="absolute top-7 left-80 p-4 min-h-[60px] min-w-fit flex"
 					style={{
 						backgroundImage: `url("${button}")`,
 						backgroundSize: "100% 100%",
@@ -234,7 +237,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 					</p>
 				</div>
 				<div
-					className="absolute top-1/2 -translate-y-1/2 right-40 p-4 min-h-[60px] min-w-fit flex"
+					className="absolute top-7 right-80 p-4 min-h-[60px] min-w-fit flex"
 					style={{
 						backgroundImage: `url("${button}")`,
 						backgroundSize: "100% 100%",
@@ -243,13 +246,49 @@ export default function Grid({ node }: { node: DRPNode }) {
 						cursor: "pointer",
 					}}
 					onClick={async () => {
-						const grid = await createGrid();
-						setGridId(grid.id);
+						navigator.clipboard.writeText(gridId);
 					}}
 				>
 					<p className="z-10 text-center text-[12px] text-nowrap font-['Pixel'] px-2 mb-6">
-						Join Grid
+						Copy Grid ID
 					</p>
+				</div>
+				<div className="absolute top-0 flex gap-4 items-center">
+					<div
+						className="p-4"
+						style={{
+							backgroundImage: `url("${input}")`,
+							backgroundSize: "100% 100%",
+							backgroundRepeat: "no-repeat",
+						}}
+					>
+						<input
+							placeholder="Grid ID"
+							className="bg-transparent focus:outline-none font-['Pixel']"
+							onChange={(e) => {
+								setGridIdInput(e.target.value);
+							}}
+							value={gridIdInput}
+						/>
+					</div>
+					<div
+						className="p-4 min-h-[60px] min-w-fit flex"
+						style={{
+							backgroundImage: `url("${button}")`,
+							backgroundSize: "100% 100%",
+							backgroundRepeat: "no-repeat",
+							// aspectRatio: "16/9",
+							cursor: "pointer",
+						}}
+						onClick={async () => {
+							setGridId(gridIdInput);
+							setGridIdInput("");
+						}}
+					>
+						<p className="z-10 text-center text-[12px] text-nowrap font-['Pixel'] px-2 mb-6">
+							Join Grid
+						</p>
+					</div>
 				</div>
 				<p className="font-['Pixel'] text-black text-center mb-3 text-xl">
 					Your Grid ID: {gridId.slice(0, 8)} ... {gridId.slice(-8)}
