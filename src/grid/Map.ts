@@ -36,6 +36,7 @@ export class GridMap {
 			ctx.closePath();
 		}
 		ctx.restore();
+		// ctx.translate(3000, 3000);
 
 		const image = new Image();
 		image.src = ctx.canvas.toDataURL("image/png");
@@ -48,8 +49,8 @@ export class GridMap {
 		let sx, sy, dx, dy, sWidth, sHeight, dWidth, dHeight;
 
 		// offset point to crop the image
-		sx = ~~(this.width / 2) + xView;
-		sy = ~~(this.height / 2) + yView;
+		sx = xView;
+		sy = yView;
 
 		// dimensions of cropped image
 		sWidth = context.canvas.width;

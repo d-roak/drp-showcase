@@ -88,5 +88,18 @@ export class Camera {
 			this.playerLastY = this.player.y;
 		}
 		this.viewportRect.set(this.xView, this.yView);
+
+		if (this.viewportRect.x < this.worldRect.x) {
+			this.xView = this.worldRect.x;
+		}
+		if (this.viewportRect.y < this.worldRect.y) {
+			this.yView = this.worldRect.y;
+		}
+		if (this.viewportRect.xx > this.worldRect.xx) {
+			this.xView = this.worldRect.xx - this.viewportWidth;
+		}
+		if (this.viewportRect.yy > this.worldRect.yy) {
+			this.yView = this.worldRect.yy - this.viewportRect.height;
+		}
 	}
 }

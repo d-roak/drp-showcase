@@ -16,18 +16,28 @@ export class Player {
 	}
 
 	draw(ctx: CanvasRenderingContext2D, xView: number, yView: number) {
-		console.log(xView, yView);
-
 		ctx.save();
 		ctx.beginPath();
 		// ctx.fillStyle = this.color;
-		ctx.drawImage(
-			this.img,
-			this.x - xView + 10,
-			this.y - yView + 10,
-			CELL_SIZE - 20,
-			CELL_SIZE - 20,
-		);
+		const coords = {
+			x: this.x - xView + 10,
+			y: this.y - yView + 10,
+		};
+
+		// if (coords.x < xView) {
+		// 	coords.x = xView;
+		// }
+		// if (coords.y < yView) {
+		// 	coords.y = yView;
+		// }
+		// if (coords.x > xView + ctx.canvas.width) {
+		// 	coords.x = xView + ctx.canvas.width;
+		// }
+		// if (coords.y > yView + ctx.canvas.height) {
+		// 	coords.y = yView + ctx.canvas.height;
+		// }
+
+		ctx.drawImage(this.img, coords.x, coords.y, CELL_SIZE - 20, CELL_SIZE - 20);
 		ctx.restore();
 	}
 }

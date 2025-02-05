@@ -11,11 +11,13 @@ import right from "../../assets/grid/right.svg";
 import mandu from "../../assets/grid/mandu.svg";
 import input from "../../assets/grid/input.svg";
 import copy from "../../assets/grid/copy.svg";
+import trash from "../../assets/grid/trash.svg";
+import heart from "../../assets/grid/heart.svg";
 import { GridGame } from "../../grid";
 import { Player } from "../../grid/Player";
 import { getColorForPeerId } from "../../utils/color";
 import { CELL_SIZE } from "../../grid/Map";
-import { User } from "lucide-react";
+import { formatPeerId } from "../../utils/formatting";
 
 const directionMap: Record<string, string> = {
 	ArrowUp: "U",
@@ -35,6 +37,10 @@ export default function Grid({ node }: { node: DRPNode }) {
 	const [gridId, setGridId] = useState<string>("");
 	const [grid, setGrid] = useState<GridDRP | null>(null);
 	const [gridIdInput, setGridIdInput] = useState<string>("");
+	const [peerMaInput, setPeerMaInput] = useState<string>("");
+	const [bootstraps, setBootstraps] = useState<string[]>(
+		node.networkNode.getBootstrapNodes(),
+	);
 	const [peers, setPeers] = useState<string[]>([]);
 	const [ma, setMa] = useState<string>("");
 	const gridCanvas = useRef<HTMLCanvasElement>(null);
@@ -68,10 +74,20 @@ export default function Grid({ node }: { node: DRPNode }) {
 
 	const movementHandler = useCallback(
 		(event: KeyboardEvent) => {
-			if (!grid) return;
+			if (!grid || !gridGame) return;
 
 			const direction = directionMap[event.key];
 			if (!direction) return;
+
+			const center = gridGame?.center;
+			const pos = grid.positions.get(peerId) || { x: 0, y: 0 };
+			const change = grid.getDirectionValue(direction);
+			const newPos = {
+				x: center.x + (pos.x + change.x) * CELL_SIZE,
+				y: center.y + (pos.y + change.y) * CELL_SIZE,
+			};
+
+			if (!gridGame.isValidPosition(newPos)) return;
 
 			grid.moveUser(peerId, direction);
 		},
@@ -147,6 +163,21 @@ export default function Grid({ node }: { node: DRPNode }) {
 		};
 	}, [node]);
 
+	const removeBootstrap = async (id: string) => {
+		try {
+			const newBootstraps = bootstraps.filter((n) => n !== id);
+			setBootstraps(newBootstraps);
+			await node.restart({
+				network_config: {
+					bootstrap_peers: newBootstraps,
+				},
+			});
+			console.log("newBootstraps", newBootstraps);
+		} catch (e) {
+			console.error(e);
+		}
+	};
+
 	return (
 		<div className="relative min-h-screen max-h-screen flex flex-col h-screen bg-gradient-to-t from-[#383838] to-[50%] to-[#C3C5C3] pt-4">
 			<div className="px-20 py-8 flex-grow flex flex-col">
@@ -220,13 +251,9 @@ export default function Grid({ node }: { node: DRPNode }) {
 									backgroundSize: "100% 100%",
 								}}
 							>
-								<User size={24} />
-								<p className="mb-2">
-									{node.networkNode.peerId.slice(0, 4)}...
-									{node.networkNode.peerId.slice(-4)}
-								</p>
+								<img src={heart} alt="heart" className="mb-1 w-[130px]" />
 							</div>
-							<img src={right} alt="right" className="" />
+							<img src={right} alt="right" />
 						</div>
 					</div>
 					<canvas
@@ -241,39 +268,110 @@ export default function Grid({ node }: { node: DRPNode }) {
 					<div className="w-3 aspect-square rounded-full bg-[#FFE100]" />
 					<div className="w-3 aspect-square rounded-full bg-[#E44B4B]" />
 				</div>
-				<div className="flex font-['Pixel'] p-4 gap-4">
+				<div className="flex flex-col font-['Pixel'] p-4 gap-4">
 					<div className="relative p-2 border-t-2 border-r-2 rounded-r-sm rounded-b-none border-black min-w-[250px]">
 						<h3 className="absolute -top-4 left-0 z-10 bg-[#FFFDF1] text-nowrap">
 							Your bootstraps
 						</h3>
 						<div className="flex flex-col gap-2 mt-4">
-							{node.networkNode.getBootstrapNodes().map((node) => {
+							{bootstraps.map((node) => {
+								const peerId = node.split("/").pop()
+									? node.split("/").pop()
+									: "";
 								return (
-									<div key={node} className="">
-										<p className="text-nowrap font-['Pixel']">
-											{node.slice(0, 4)}...{node.slice(-4)}
+									<div key={node} className="flex items-end gap-2">
+										<p className="text-nowrap font-['Pixel'] grow">
+											{formatPeerId(peerId ?? "")}
 										</p>
+										<button
+											type="button"
+											onClick={() => {
+												removeBootstrap(node);
+											}}
+										>
+											<img
+												src={trash}
+												alt="trash"
+												className="w-4 aspect-square"
+											/>
+										</button>
 									</div>
 								);
 							})}
 						</div>
 					</div>
-					<div className="relative p-2 border-t-2 border-l-2 rounded-l-sm rounded-b-none border-black min-w-[250px]">
-						<h3 className="absolute -top-4 right-0 z-10 bg-[#FFFDF1] text-nowrap">
+					<div className="relative p-2 border-t-2 border-r-2 rounded-l-sm rounded-b-none border-black min-w-[250px]">
+						<h3 className="absolute -top-4 left-0 z-10 bg-[#FFFDF1] text-nowrap">
 							Your connections
 						</h3>
 						<div className="flex flex-col gap-2 mt-4">
-							{peers.map((node) => {
-								return (
-									<div key={node} className="">
-										<p className="text-nowrap font-['Pixel']">
-											{node.slice(0, 4)}...{node.slice(-4)}
-										</p>
+							{peers.map((peer) =>
+								bootstraps.some((multiaddr) => {
+									return multiaddr.includes(peer);
+								}) ? null : (
+									<div key={peer} className="flex items-center justify-between">
+										<p>{formatPeerId(peer)}</p>
+										<button
+											className="p-0 bg-transparent text-white"
+											onClick={async () => {
+												await node.networkNode.disconnect(peer);
+											}}
+											type="button"
+										>
+											<img
+												src={trash}
+												alt="trash"
+												className="w-4 aspect-square"
+											/>
+										</button>
 									</div>
-								);
-							})}
+								),
+							)}
 						</div>
 					</div>
+				</div>
+			</div>
+			<div className="absolute right-10 top-1/2 border-4 rounded-xl border-black bg-white">
+				<div className="flex justify-end gap-2 p-2">
+					<div className="w-3 aspect-square rounded-full bg-[#719F52]" />
+					<div className="w-3 aspect-square rounded-full bg-[#FFE100]" />
+					<div className="w-3 aspect-square rounded-full bg-[#E44B4B]" />
+				</div>
+				<div
+					className="p-4 mx-10 mb-4"
+					style={{
+						backgroundImage: `url("${input}")`,
+						backgroundSize: "100% 100%",
+						backgroundRepeat: "no-repeat",
+					}}
+				>
+					<input
+						placeholder="Peer multiaddrs"
+						className="bg-transparent focus:outline-none font-['Pixel'] w-[180px]"
+						onChange={(e) => {
+							setPeerMaInput(e.target.value);
+						}}
+						value={peerMaInput}
+					/>
+				</div>
+				<div
+					className="p-4 min-h-[60px] w-fit flex mx-auto mb-4"
+					style={{
+						backgroundImage: `url("${button}")`,
+						backgroundSize: "100% 100%",
+						backgroundRepeat: "no-repeat",
+						// aspectRatio: "16/9",
+						cursor: "pointer",
+					}}
+					onClick={async () => {
+						if (peerMaInput === "") return;
+						await node.networkNode.connect(peerMaInput);
+						setPeerMaInput("");
+					}}
+				>
+					<p className="z-10 text-center text-[12px] text-nowrap font-['Pixel'] px-2 mb-6">
+						Connect
+					</p>
 				</div>
 			</div>
 			<div
