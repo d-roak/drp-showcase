@@ -458,30 +458,6 @@ export default function Grid({ node }: { node: DRPNode }) {
 					Your Grid ID: {gridId.slice(0, 8)} ... {gridId.slice(-8)}
 				</p>
 			</div>
-			{/* <GridMenu
-				gridId={gridId}
-				setCurrentGridId={setGridId}
-				createGrid={createGrid}
-			/> */}
-			{/*<div className="flex flex-col items-center grow w-full">
-				<GridLayout>
-					{(dimensions) => (
-						<>
-							<GridBackground
-								centerX={dimensions.centerX}
-								centerY={dimensions.centerY}
-								clientWidth={dimensions.clientWidth}
-								clientHeight={dimensions.clientHeight}
-							/>
-							<GridPlayers
-								centerX={dimensions.centerX}
-								centerY={dimensions.centerY}
-								positions={Array.from(positions.entries())}
-							/>
-						</>
-					)}
-				</GridLayout>
-			</div> */}
 		</div>
 	);
 }
