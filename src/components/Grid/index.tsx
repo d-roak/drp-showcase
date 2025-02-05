@@ -304,7 +304,12 @@ export default function Grid({ node }: { node: DRPNode }) {
 						<h3 className="absolute -top-4 left-0 z-10 bg-[#FFFDF1] text-nowrap">
 							Your connections
 						</h3>
-						<div className="flex flex-col gap-2 mt-4">
+						<div
+							className="flex flex-col gap-2 mt-4 max-h-[300px] overflow-scroll"
+							style={{
+								scrollbarWidth: "none",
+							}}
+						>
 							{peers.map((peer) =>
 								bootstraps.some((multiaddr) => {
 									return multiaddr.includes(peer);
@@ -331,7 +336,7 @@ export default function Grid({ node }: { node: DRPNode }) {
 					</div>
 				</div>
 			</div>
-			<div className="absolute right-10 top-1/2 border-4 rounded-xl border-black bg-white">
+			<div className="absolute right-10 top-1/2 border-4 rounded-xl border-black bg-[#FFFDF1]">
 				<div className="flex justify-end gap-2 p-2">
 					<div className="w-3 aspect-square rounded-full bg-[#719F52]" />
 					<div className="w-3 aspect-square rounded-full bg-[#FFE100]" />
