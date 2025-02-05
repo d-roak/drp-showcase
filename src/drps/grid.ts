@@ -33,10 +33,10 @@ export class GridDRP implements DRP {
 		if (position) {
 			switch (direction) {
 				case "U":
-					position.y += 1;
+					position.y -= 1;
 					break;
 				case "D":
-					position.y -= 1;
+					position.y += 1;
 					break;
 				case "L":
 					position.x -= 1;
@@ -46,6 +46,21 @@ export class GridDRP implements DRP {
 					break;
 			}
 			this.query_reactCallback(peerId, position);
+		}
+	}
+
+	getDirectionValue(direction: string): { x: number; y: number } {
+		switch (direction) {
+			case "U":
+				return { x: 0, y: -1 };
+			case "D":
+				return { x: 0, y: 1 };
+			case "L":
+				return { x: -1, y: 0 };
+			case "R":
+				return { x: 1, y: 0 };
+			default:
+				return { x: 0, y: 0 };
 		}
 	}
 
